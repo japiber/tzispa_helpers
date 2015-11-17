@@ -6,7 +6,7 @@ module Tzispa
 
       def send_smtp_mail(from:, to:, subject:, body:, config:, html: false)
         begin
-          smtp_config config
+          smtp_configuration config
           mail = ::Mail.new
           mail.from    = from
           mail.to      = to
@@ -27,7 +27,7 @@ module Tzispa
 
       private
 
-      def smtp_config(config)
+      def smtp_configuration(config)
         if config.smtp_auth
           ::Mail.defaults do
             delivery_method :smtp, address: config.host, domain: config.domain,

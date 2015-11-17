@@ -3,30 +3,43 @@ module Tzispa
     module Pattern
 
       def pattern_select_hours(selected=nil)
-        selected = selected.to_i
-        Enumerator.new { |litems|
-          (0..23).each { |h|
-            item = OpenStruct.new
-            item.value = h
-            item.text = h.to_s.rjust(2, '0')
-            item.selected = html_selected selected == h
-            litems << item
+        Proc.new {
+          (0..23).map { |hour|
+            loop_item(
+              value: hour,
+              text: hour.to_s.rjust(2, '0'),
+              selected: html_selected( selected == hour )
+            )
           }
         }
       end
 
       def pattern_select_minutes(selected=nil)
-        selected = selected.to_i
-        Enumerator.new { |litems|
-          (0..59).each { |m|
-            item = OpenStruct.new
-            item.value = m
-            item.text = m.to_s.rjust(2, '0')
-            item.selected = html_selected selected == m
-            litems << item
+        Proc.new {
+          (0..59).map { |minute|
+            loop_item(
+              value: minute,
+              text: minute.to_s.rjust(2, '0'),
+              selected: html_selected( selected == minute )
+            )
           }
         }
       end
+
+      def pattern_select_year(first, last, selected=nil, reverse=true)
+        Proc.new {
+          ryear = (first..last)
+          enum_year = first > last ? (ryear.first).downto(ryear.last) : (ryear.first).to(ryear.last)          
+          enum_year.map { |year|
+            loop_item(
+              value: year,
+              text:  year,
+              selected: html_selected( selected == year )
+            )
+          }
+        }
+      end
+
 
 
     end

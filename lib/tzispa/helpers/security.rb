@@ -12,7 +12,7 @@ module Tzispa
         (0...length-1).map { alfanb[rand(alfanb.length)] }.join
       end
 
-      def uuid()
+      def uuid
         sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
           # 32 bits for "time_low"
           rand(0..0xffff), rand(0..0xffff),
@@ -34,7 +34,7 @@ module Tzispa
         )
       end
 
-      def sign_array(astr,salt=nil)
+      def sign_array(astr, salt=nil)
         sign, i = "", 0
         astr.each { |s|
           i = i + 1
@@ -48,8 +48,8 @@ module Tzispa
         Digest::MD5::hexdigest "#{password}::#{salt}"
       end
 
-      def hash_password?(hashed,pwd,salt)
-        hashed == hash_password( pwd, salt)
+      def hash_password?(hashed, pwd, salt)
+        hashed == hash_password(pwd, salt)
       end
 
 
