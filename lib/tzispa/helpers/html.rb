@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'cgi/util'
 require 'uri'
 
@@ -6,11 +8,11 @@ module Tzispa
     module Html
 
       def html_checked(value)
-        value ? ' checked="checked"'.freeze : String.new.freeze
+        value ? ' checked="checked"' : String.new.freeze
       end
 
       def html_selected(value)
-        value ? ' selected="selected"'.freeze : String.new.freeze
+        value ? ' selected="selected"' : String.new.freeze
       end
 
       def html_escape(str)

@@ -1,9 +1,17 @@
+# frozen_string_literal: true
+
 require 'uri'
+require_relative 'mime'
 
 module Tzispa
   module Helpers
     module Response
 
+      def self.included(base)
+        base.class_eval do
+          include Tzispa::Helpers::Mime
+        end
+      end
 
       # Set or retrieve the response status code.
       def status(value = nil)
@@ -50,7 +58,7 @@ module Tzispa
       # Takes Rack routers and reverse proxies into account.
       def uri(addr = nil, absolute = true)
         return addr if addr =~ /\A[A-z][A-z0-9\+\.\-]*:/
-        uri = [host = ""]
+        uri = [host = String.new]
         if absolute
           host << "http#{'s' if request.secure?}://"
           if request.forwarded? or request.port != (request.secure? ? 443 : 80)
@@ -86,14 +94,6 @@ module Tzispa
         response.headers
       end
 
-      def mime_type(type, value = nil)
-        return type      if type.nil?
-        return type.to_s if type.to_s.include?('/')
-        type = ".#{type}" unless type.to_s[0] == ?.
-        return Rack::Mime.mime_type(type, nil) unless value
-        Rack::Mime::MIME_TYPES[type] = value
-      end
-
       # Set the Content-Type of the response body given a media type or file
       # extension.
       def content_type(type = nil, params = {})
@@ -116,14 +116,11 @@ module Tzispa
         response['Content-Type'] = mime_type
       end
 
-
       def attachment!(filename = nil, disposition = 'attachment')
         content_disposition = disposition.to_s
         content_disposition += "; filename=\"#{filename}\"; filename*=UTF-8''#{URI.escape(filename)}" if !filename.nil?
         response['Content-Disposition'] = content_disposition
       end
-
-
 
       # Use the contents of the file at +path+ as the response body.
       def send_file(path, opts = {})
@@ -142,15 +139,15 @@ module Tzispa
 
           file      = Rack::File.new nil
           file.path = path
-          result    = file.serving env
+          result    = file.serving context.env
           result[1].each { |k,v| response.headers[k] ||= v }
           response.headers['Content-Length'] = result[1]['Content-Length']
           #opts[:status] &&= Integer(opts[:status])
           #halt opts[:status] || result[0], result[2]
           response.status = result[0]
           response.body = result[2]
-        rescue Errno::ENOENT
-          not_found
+        rescue
+          not_found 'Fichero no encontrado'
         end
       end
 

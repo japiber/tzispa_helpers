@@ -1,5 +1,6 @@
-require 'digest'
+# frozen_string_literal: true
 
+require 'digest'
 
 module Tzispa
   module Helpers
@@ -35,7 +36,7 @@ module Tzispa
       end
 
       def sign_array(astr, salt=nil)
-        sign, i = "", 0
+        sign, i = String.new, 0
         astr.each { |s|
           i = i + 1
           sign << "#{"_"*i}#{s}"
