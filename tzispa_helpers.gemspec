@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.authors     = ['Juan Antonio Piñero']
   s.email       = ['japinero@area-integral.com']
-  s.homepage    = 'https://www.area-integral.com'
+  s.homepage    = 'https://github.com/japiber/tzispa_helpers.git'
   s.summary     = 'Helpers for Tzispa'
   s.description = 'Module Helpers for Tzispa framework'
   s.licenses    = ['MIT']
