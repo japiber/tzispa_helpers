@@ -10,8 +10,8 @@ module Tzispa
       def secret(length)
         alfanb = (['!', '"', '·', '$', '%', '&', '/', '(', ')', '=', '?', '+',
                   '@', '#', ',', '.', '-', ';', ':', '_', '[', ']', '>', '<', '*'] <<
-                  [('a'..'z'), ('0'..'9'), ('A'..'Z')].map { |i| i.to_a }).flatten]
-        (0...length-1).map { alfanb[rand(alfanb.length)] }.join
+                  [('a'..'z'), ('0'..'9'), ('A'..'Z')].map { |i| i.to_a }).flatten
+        (0...length).map { alfanb[rand(alfanb.length)] }.join
       end
 
       def uuid
