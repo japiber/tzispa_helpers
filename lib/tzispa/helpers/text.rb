@@ -144,6 +144,13 @@ module Tzispa
         end
       end
 
+      def starinizer(rating, star_value, max_stars)
+        Hash.new.tap { |stars|
+          stars[:full] = rating / star_value
+          stars[:half] = rating % star_value
+          stars[:o] = max_stars - stars[:full] - stars[:half]
+        }
+      end
 
 
     end
