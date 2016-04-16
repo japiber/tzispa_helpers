@@ -27,29 +27,66 @@ module Tzispa
         end
       end
 
-      def crawler_table_to_dl(source, table_path, columns=2, excluded_terms=[])
+      def crawler_table_to_dl(noko, table_path, columns, excluded_terms: [], fussion_terms:{})
         String.new.tap { |content|
-          dt, dd = Array.new, Array.new
-          htmee = HTMLEntities.new
           markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML.new)
-          Nokogiri::HTML(source)&.xpath(table_path).collect { |row|
-            dterm = htmee.decode(row.at_xpath('td[1]')&.content).strip
-            if dterm.length > 0 && !excluded_terms.include?(UnicodeUtils.downcase dterm)
-              dt << dterm
-              dd << (2..columns).map { |i|
-                  ReverseMarkdown.convert(htmee.decode(row.at_xpath("td[#{i}]")&.children&.to_s || row.at_xpath("td[#{i}]")&.to_s).strip, unknown_tags: :bypass)
-              }.join('\n')
+          sections = crawler_table(noko, table_path, columns)
+          sections.keys.each { |key|
+            if fussion_terms.has_key?(key)
+              sections[fussion_terms[key]] ?
+                sections[fussion_terms[key]] += sections[key] :
+                sections[fussion_terms[key]] = sections[key]
+              sections.delete(key)
             end
-          }
-          if dt.length > 0
+          } unless fussion_terms.empty?
+          unless sections.empty?
             content << '<dl>'
-            dt.zip(dd).sort.each do |idt,idd|
-               if idt.length > 0 && !excluded_terms.include?(UnicodeUtils.downcase idt)
-                 content << "<dt>#{idt}</dt>"
-                 content << "<dd>#{markdown.render idd}</dd>"
-               end
-            end
+            sections.sort.each { |key, value|
+              unless key.empty? || value.empty? || excluded_terms.include?(UnicodeUtils.downcase key)
+                content << "<dt>#{key}</dt>"
+                if value.is_a?(Array) && value.count > 1
+                  content << '<ul>' << value.map { |item| "<li>#{markdown.render item}</li>"}.join("\n") << '</ul>'
+                elsif value.is_a?(Array) && value.count == 1
+                  content << "<dd>#{markdown.render value.first}</dd>"
+                else
+                  content << "<dd>#{markdown.render value}</dd>"
+                end
+              end
+            }
             content << "</dl>"
+          end
+        }
+      end
+
+      def crawler_table(noko, table_path, columns)
+        Hash.new.tap { |sections|
+          htmee = HTMLEntities.new
+          noko = noko.xpath(table_path)
+          colspans = "td[@colspan=\"#{columns}\"]"
+          if noko.xpath(colspans).count == 0
+            noko.collect { |row|
+              dterm = htmee.decode(row.at_xpath('td[1]')&.content).gsub(/\n|\r|\t/,' ').strip
+              unless dterm.empty?
+                sections[dterm] ||= Array.new
+                sections[dterm] << (2..columns).map { |i|
+                    ReverseMarkdown.convert(htmee.decode(row.at_xpath("td[#{i}]")&.children&.to_s || row.at_xpath("td[#{i}]")&.to_s).strip, unknown_tags: :bypass).gsub(/\r|\t/,' ').strip
+                }.join('\n')
+              end
+            }
+          else
+            current_section = nil
+            noko.collect { |row|
+               unless row.xpath(colspans)&.text.strip.empty?
+                 current_section = row.xpath("td[@colspan=\"#{columns}\"]").text.gsub(/\n|\r|\t/,' ').strip
+                 sections[current_section] ||= Array.new
+               else
+                 if current_section
+                   sections[current_section] << (1..columns).map { |i|
+                       ReverseMarkdown.convert(htmee.decode(row.at_xpath("td[#{i}]")&.children&.to_s.strip || row.at_xpath("td[#{i}]")&.to_s.strip), unknown_tags: :bypass).gsub(/\r|\t/,' ').strip
+                   }.join(': ')
+                 end
+               end
+             }
           end
         }
       end
