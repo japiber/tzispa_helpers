@@ -62,7 +62,7 @@ module Tzispa
 
       def crawler_table(noko, table_path, columns)
         Hash.new.tap { |sections|
-          htmee = HTMLEntities.new
+          htmee = HTMLEntities.new(:expanded)
           noko = noko.xpath(table_path)
           colspans = "td[@colspan=\"#{columns}\"]"
           if noko.xpath(colspans).count == 0
@@ -71,7 +71,9 @@ module Tzispa
               unless dterm.empty?
                 sections[dterm] ||= Array.new
                 sections[dterm] << (2..columns).map { |i|
-                    ReverseMarkdown.convert(htmee.decode(row.at_xpath("td[#{i}]")&.children&.to_s || row.at_xpath("td[#{i}]")&.to_s).strip, unknown_tags: :bypass).gsub(/\r|\t/,' ').strip
+                    ReverseMarkdown.convert(
+                      htmee.decode(row.at_xpath("td[#{i}]")&.children&.to_s || row.at_xpath("td[#{i}]")&.to_s).strip, unknown_tags: :bypass
+                    ).gsub(/\r|\t/,' ').strip
                 }.join('\n')
               end
             }
@@ -79,12 +81,14 @@ module Tzispa
             current_section = nil
             noko.collect { |row|
                unless row.xpath(colspans)&.text.strip.empty?
-                 current_section = row.xpath("td[@colspan=\"#{columns}\"]").text.gsub(/\n|\r|\t/,' ').strip
+                 current_section = htmee.decode(row.xpath("td[@colspan=\"#{columns}\"]").text).gsub(/\n|\r|\t/,' ').strip
                  sections[current_section] ||= Array.new
                else
                  if current_section
                    sections[current_section] << (1..columns).map { |i|
-                       ReverseMarkdown.convert(htmee.decode(row.at_xpath("td[#{i}]")&.children&.to_s.strip || row.at_xpath("td[#{i}]")&.to_s.strip), unknown_tags: :bypass).gsub(/\r|\t/,' ').strip
+                      ReverseMarkdown.convert(
+                        htmee.decode(row.at_xpath("td[#{i}]")&.children&.to_s.strip || row.at_xpath("td[#{i}]")&.to_s.strip), unknown_tags: :bypass
+                      ).gsub(/\r|\t/,' ').strip
                    }.join(': ')
                  end
                end
