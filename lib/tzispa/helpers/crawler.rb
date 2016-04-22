@@ -6,15 +6,24 @@ require 'htmlentities'
 require 'reverse_markdown'
 require 'unicode_utils'
 require 'redcarpet'
+require 'tzispa/helpers/hash_trans'
 
 module Tzispa
   module Helpers
     module Crawler
 
+      include Tzispa::Helpers::HashTrans
+
+      class CrawlerError < StandardError; end
+
 
       def crawler_save_file(url, dest_file)
-        File.open("#{dest_file}", 'wb') do |fo|
-             fo.write open(url).read
+        begin
+          File.open("#{dest_file}", 'wb') do |fo|
+               fo.write open(url).read
+          end
+        rescue => ex
+          raise CrawlerError.new "Error in crawler_save_file '#{url}': #{ex.message}"
         end
       end
 
@@ -31,14 +40,7 @@ module Tzispa
         String.new.tap { |content|
           markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML.new)
           sections = crawler_table(noko, table_path, columns)
-          sections.keys.each { |key|
-            if fussion_terms.has_key?(key)
-              sections[fussion_terms[key]] ?
-                sections[fussion_terms[key]] += sections[key] :
-                sections[fussion_terms[key]] = sections[key]
-              sections.delete(key)
-            end
-          } unless fussion_terms.empty?
+          hash_fussion! sections, fussion_terms
           unless sections.empty?
             content << '<dl>'
             sections.sort.each { |key, value|
