@@ -20,7 +20,7 @@ module Tzispa
       def crawler_save_file(url, dest_file)
         begin
           File.open("#{dest_file}", 'wb') do |fo|
-               fo.write open(url).read
+            fo.write open(url).read
           end
         rescue => ex
           raise CrawlerError.new "Error in crawler_save_file '#{url}': #{ex.message}"
@@ -94,6 +94,27 @@ module Tzispa
                end
              }
           end
+        }
+      end
+
+      def crawler_table_to_list(noko, table_path, excluded_terms: [])
+        htmee = HTMLEntities.new(:expanded)
+        markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML.new)
+        String.new.tap { |list|
+          list << '<ul>'
+          list << Array.new.tap { |lines|
+            noko.xpath(table_path).collect { |row|
+              line = if row.xpath('table/tr/td').count > 0
+                crawler_table(row, 'table/tr', 2)
+              else
+                ReverseMarkdown.convert(
+                  htmee.decode(row&.children&.to_s.strip), unknown_tags: :bypass
+                ).gsub(/\r|\t/,' ').strip
+                lines << "<li>#{markdown.render line}</li>" unless line.empty? || excluded_terms.include?(line)
+              end
+            }
+          }.join
+          list << '</ul>'
         }
       end
 
