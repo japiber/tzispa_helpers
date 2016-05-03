@@ -88,7 +88,7 @@ module Tzispa
                    sections[current_section] << (1..columns).map { |i|
                       ReverseMarkdown.convert(
                         htmee.decode(row.at_xpath("td[#{i}]")&.children&.to_s.strip || row.at_xpath("td[#{i}]")&.to_s.strip), unknown_tags: :bypass
-                      ).gsub(/\r|\t/,' ').strip
+                      ).strip
                    }.join(': ')
                  end
                end
@@ -103,15 +103,15 @@ module Tzispa
         String.new.tap { |list|
           list << '<ul>'
           list << Array.new.tap { |lines|
-            noko.xpath(table_path).collect { |row|
-              line = if row.xpath('table/tr/td').count > 0
-                crawler_table(row, 'table/tr', 2)
+            noko.xpath(table_path).collect { |td|
+              line = if td.xpath('table/tr/td').count > 0
+                crawler_table(td, 'table/tr', 2)
               else
                 ReverseMarkdown.convert(
-                  htmee.decode(row&.children&.to_s.strip), unknown_tags: :bypass
-                ).gsub(/\r|\t/,' ').strip
-                lines << "<li>#{markdown.render line}</li>" unless line.empty? || excluded_terms.include?(line)
+                  td&.children&.to_s.strip, unknown_tags: :bypass
+                ).strip
               end
+              lines << "<li>#{htmee.decode(markdown.render line)}</li>" unless line.empty? || excluded_terms.include?(line)
             }
           }.join
           list << '</ul>'
