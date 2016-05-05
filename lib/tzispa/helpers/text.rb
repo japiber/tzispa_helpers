@@ -74,6 +74,17 @@ module Tzispa
         result
       end
 
+      def str_to_amount(str, options = {})
+        if str && !str.strip.empty?
+          separator = options.fetch(:separator, I18n.t('number.currency.format.separator'))
+          precision = options.fetch(:precision, I18n.t('number.currency.format.precision'))
+          re = Regexp.new "[^\\d\\#{separator}\\-]"
+          str = str.gsub(re, '')
+          str = str.gsub(separator, '.') if separator != '.'
+          BigDecimal.new(str).round(precision).to_s('F')
+        end
+      end
+
       def amount(number, options = {})
         if number.nil? && options[:nil_as_dash] != false
           '–'
