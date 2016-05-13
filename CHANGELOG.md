@@ -1,8 +1,10 @@
 Tzispa Helpers
 
-## v0.1.5
+## v0.1.6
+- Add raise exception for debug in send_smtp_mail
+
 ## v0.1.4
--- Fix secret generator in security
+- Fix secret generator in security
 
 ## v0.1.3
 - Added mime module, code moved partially from response

@@ -5,6 +5,7 @@ require 'bigdecimal'
 require 'i18n'
 require "unicode_utils"
 require 'redcarpet'
+require 'cgi/util'
 
 module Tzispa
   module Helpers
@@ -43,6 +44,10 @@ module Tzispa
              UnicodeUtils.titlecase(sstr)
           else sstr
         end
+      end
+
+      def html_unscape(str)
+        CGI::unescapeHTML(str.strip) if str && !str.strip.empty?
       end
 
       def split_to_array(str, separator=';')

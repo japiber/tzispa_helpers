@@ -6,7 +6,7 @@ module Tzispa
   module Helpers
     module Mail
 
-      def send_smtp_mail(from:, to:, subject:, body:, config:, cc: nil, html: false)
+      def send_smtp_mail(from:, to:, subject:, body:, config:, cc: nil, html: false, debug: false)
         begin
           smtp_configuration config
           mail = ::Mail.new
@@ -38,7 +38,7 @@ module Tzispa
             nil
           end
         rescue
-          nil
+          raise if debug
         end
       end
 
