@@ -1,5 +1,8 @@
 Tzispa Helpers
 
+## v0.1.7
+- Fix error in mime_formatter text/x-markdown when text is nil
+
 ## v0.1.6
 - Add raise exception for debug in send_smtp_mail
 

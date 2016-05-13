@@ -3,7 +3,7 @@
 module Tzispa
   module Helpers
 
-    VERSION  = '0.1.6'
+    VERSION  = '0.1.7'
     NAME     = 'Tzispa Helpers'
     GEM_NAME = 'tzispa_helpers'
 
