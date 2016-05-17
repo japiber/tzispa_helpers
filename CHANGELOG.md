@@ -1,5 +1,8 @@
 Tzispa Helpers
 
+## v0.1.8
+- Add error_view module
+
 ## v0.1.7
 - Fix error in mime_formatter text/x-markdown when text is nil
 
