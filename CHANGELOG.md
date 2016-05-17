@@ -1,5 +1,8 @@
 Tzispa Helpers
 
+## v0.1.9
+- Set default value for status parameter in error_page
+
 ## v0.1.8
 - Add error_view module
 

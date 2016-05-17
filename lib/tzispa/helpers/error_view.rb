@@ -22,7 +22,7 @@ module Tzispa
         text << '</body></html>'
       end
 
-      def error_page(status, domain)
+      def error_page(domain, status: 500)
         begin
           error_file = "#{domain.path}/error/#{status}.htm"
           Tzispa::Rig::File.new(error_file).load!.content
