@@ -1,5 +1,8 @@
 Tzispa Helpers
 
+## v0.1.10
+- response class add absolute parameter in redirect method
+
 ## v0.1.9
 - Set default value for status parameter in error_page
 
