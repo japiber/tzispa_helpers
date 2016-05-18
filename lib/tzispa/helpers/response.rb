@@ -42,7 +42,7 @@ module Tzispa
 
       # Halt processing and redirect to the URI provided.
       def redirect(uri, absolute, *args)
-        if env['HTTP_VERSION'] == 'HTTP/1.1' and env["REQUEST_METHOD"] != 'GET'
+        if (env['HTTP_VERSION'] == 'HTTP/1.1' || env['HTTP_VERSION'] == 'HTTP/2.0') && env["REQUEST_METHOD"] != 'GET'
           status 303
         else
           status 302
