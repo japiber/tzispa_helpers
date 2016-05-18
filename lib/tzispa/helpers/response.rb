@@ -41,7 +41,8 @@ module Tzispa
       end
 
       # Halt processing and redirect to the URI provided.
-      def redirect(uri, *args)
+      def redirect(uri, absolute, *args)
+        puts "HTTP_VERSION=#{env['HTTP_VERSION']}" 
         if env['HTTP_VERSION'] == 'HTTP/1.1' and env["REQUEST_METHOD"] != 'GET'
           status 303
         else
@@ -50,7 +51,7 @@ module Tzispa
 
         # According to RFC 2616 section 14.30, "the field value consists of a
         # single absolute URI"
-        response['Location'] = uri(uri.to_s, config.absolute_redirects?)
+        response['Location'] = uri(uri.to_s, absolute)
         halt(*args)
       end
 
