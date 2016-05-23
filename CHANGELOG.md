@@ -1,5 +1,9 @@
 Tzispa Helpers
 
+## v0.1.11
+- in error_view module rename error_report to debug_info
+- add support for http/2 in redirect
+
 ## v0.1.10
 - response class add absolute parameter in redirect method
 
