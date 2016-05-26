@@ -17,8 +17,11 @@ module Tzispa
       class CrawlerError < StandardError; end
 
 
-      def crawler_save_file(url, dest_file)
+      def crawler_save_file(url, dest_file, accept_schemes = ['http', 'https', 'ftp'])
         begin
+          uri = URI(url)
+          raise ArgumentError.new "Inavlid url: #{url}" unless accept_schemes.include?(uri.scheme) && uri.host
+          File.delete(dest_file) if File.exist?(dest_file)
           File.open("#{dest_file}", 'wb') do |fo|
             fo.write open(url).read
           end
