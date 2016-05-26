@@ -1,5 +1,8 @@
 Tzispa Helpers
 
+## v0.1.12
+- minimal securize crawler_save_file verifying url
+
 ## v0.1.11
 - in error_view module rename error_report to debug_info
 - add support for http/2 in redirect
