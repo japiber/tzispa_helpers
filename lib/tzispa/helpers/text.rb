@@ -98,8 +98,8 @@ module Tzispa
         else
           precision = options[:precision]
           if precision
-            options[:minimum_precision] = precision
-            options[:maximum_precision] = precision
+            options[:minimum_precision] = precision unless options[:minimum_precision]
+            options[:maximum_precision] = precision unless options[:maximum_precision]
           end
 
           number = number.round if options[:round]
@@ -116,10 +116,11 @@ module Tzispa
             fraction = fraction[0, options[:maximum_precision]] if options[:maximum_precision]
           end
 
-          if minimum_precision > 0
-            if fraction.length > 0 || minimum_precision > 0
-              fraction = "#{fraction}#{'0' * [0, minimum_precision - fraction.length].max}"
-            end
+
+          if fraction.length > 0 && minimum_precision > 0
+            fraction = "#{fraction}#{'0' * [0, minimum_precision - fraction.length].max}"
+          elsif minimum_precision == 0 && fraction.length > 0 && fraction.to_i == 0
+            fraction = ''
           end
 
           # the following two lines appear to be the most performant way to add a delimiter to every thousands place in the number
@@ -144,11 +145,11 @@ module Tzispa
       end
 
       def money_amount(number, options = {})
-        amount(number, options.merge(:unit => I18n.t('number.currency.format.unit'), :nil_as_dash => true, :precision => I18n.t('number.currency.format.precision')))
+        amount(number, options.merge(:unit => I18n.t('number.currency.format.unit'), :nil_as_dash => false, :precision => I18n.t('number.currency.format.precision'), minimum_precision: 0))
       end
 
       def price_amount(number, options = {})
-        amount(number, options.merge(:nil_as_dash => true, :precision => I18n.t('number.currency.format.precision')))
+        amount(number, options.merge(:nil_as_dash => false, :precision => I18n.t('number.currency.format.precision'), minimum_precision: 0))
       end
 
       def mime_formatter(text, mime)
