@@ -1,5 +1,8 @@
 Tzispa Helpers
 
+## v0.1.13
+- amount minimum precision 0 discards fraction part
+
 ## v0.1.12
 - minimal securize crawler_save_file verifying url
 
