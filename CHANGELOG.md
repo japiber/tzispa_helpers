@@ -1,6 +1,9 @@
 Tzispa Helpers
 
 ## v0.1.13
+- fix error in crawler_table_to_list
+
+## v0.1.13
 - amount minimum precision 0 discards fraction part
 
 ## v0.1.12

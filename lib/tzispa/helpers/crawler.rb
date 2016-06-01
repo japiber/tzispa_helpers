@@ -110,13 +110,22 @@ module Tzispa
               line = if td.xpath('table/tr/td').count > 0
                 crawler_table(td, 'table/tr', 2)
               else
-                ReverseMarkdown.convert(
-                  td&.children&.to_s.strip, unknown_tags: :bypass
-                ).strip
+                raw_ln = ReverseMarkdown.convert(td&.children&.to_s.strip, unknown_tags: :bypass)
+                raw_ln unless raw_ln.empty? || excluded_terms.include?(raw_ln)
               end
-              lines << "<li>#{htmee.decode(markdown.render line)}</li>" unless line.empty? || excluded_terms.include?(line)
+              if line&.is_a? String
+                lines << "<li>#{htmee.decode(markdown.render line)}</li>"
+              elsif line.is_a? Hash
+                line&.map { |key, value|
+                  lines << "<li><strong>#{key}</strong>: #{value} </li>" unless excluded_terms.include?(key) || excluded_terms.include?(value)
+                }.join("\n")
+              else
+                line&.map { |v|
+                  lines << "<li>#{v}</li>" unless excluded_terms.include?(v)
+                }.join("\n")
+              end
             }
-          }.join
+          }.join("\n")
           list << '</ul>'
         }
       end
