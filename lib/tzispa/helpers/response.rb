@@ -54,6 +54,14 @@ module Tzispa
         halt(*args)
       end
 
+      # Halt processing and permanet_redirect redirect to the URI provided.
+      def permanent_redirect(uri, absolute, *args)
+        status 301
+        response['Location'] = uri(uri.to_s, absolute)
+        halt(*args)
+      end
+
+
       # Generates the absolute URI for a given path in the app.
       # Takes Rack routers and reverse proxies into account.
       def uri(addr = nil, absolute = true)
