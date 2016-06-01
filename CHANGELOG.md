@@ -1,6 +1,9 @@
 Tzispa Helpers
 
-## v0.1.13
+## v0.1.15
+- add permanent_redirect method to provide http 301 response
+
+## v0.1.14
 - fix error in crawler_table_to_list
 
 ## v0.1.13
