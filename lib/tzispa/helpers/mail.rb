@@ -6,7 +6,7 @@ module Tzispa
   module Helpers
     module Mail
 
-      def send_smtp_mail(from:, to:, subject:, body:, config:, cc: nil, html: false, debug: false)
+      def send_smtp_mail(from:, to:, subject:, body:, config:, cc: nil, html: false, debug: false, charset: 'UTF-8')
         begin
           smtp_configuration config
           mail = ::Mail.new
@@ -27,12 +27,13 @@ module Tzispa
             mail.subject = subject
             if html
               mail.html_part do
-                content_type 'text/html; charset=UTF-8'
+                content_type "text/html; charset=#{charset}"
                 body = body
               end
             else
               mail.body = body
             end
+            mail.charset = charset
             mail.deliver
           else
             nil
