@@ -1,5 +1,8 @@
 Tzispa Helpers
 
+## v0.1.16
+- add charset parameter in mail helper / send_smtp_mail
+
 ## v0.1.15
 - add permanent_redirect method to provide http 301 response
 
