@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'unicode_utils',      '~> 1.4'
   #s.add_dependency 'reverse_markdown',   '~> 1.0'
   s.add_dependency 'redcarpet',          '~> 3.3'
-  s.add_dependency 'nokogiri',           '~> 1.6.8.rc2'
+  s.add_dependency 'nokogiri',           '~> 1.6'
 
   s.files         = Dir.glob("{lib}/**/*") + %w(README.md CHANGELOG.md)
   s.require_paths = ['lib']
