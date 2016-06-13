@@ -1,5 +1,9 @@
 Tzispa Helpers
 
+## v0.1.17
+- add require tzispa/version in error_view
+- fix nokogiri required version in gemspec
+
 ## v0.1.16
 - add charset parameter in mail helper / send_smtp_mail
 
