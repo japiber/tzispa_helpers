@@ -1,5 +1,5 @@
-require 'tzispa'
 require 'tzispa/rig/template'
+require 'tzispa/version'
 
 module Tzispa
   module Helpers
