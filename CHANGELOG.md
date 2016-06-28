@@ -1,5 +1,8 @@
 Tzispa Helpers
 
+## v0.1.18
+- add str_time_ellapsed method in text helper
+
 ## v0.1.17
 - add require tzispa/version in error_view
 - fix nokogiri required version in gemspec
