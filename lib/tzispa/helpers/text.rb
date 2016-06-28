@@ -79,6 +79,14 @@ module Tzispa
         result
       end
 
+      def str_time_ellapsed(t_start, t_end=nil)
+        elapsed = (t_end || Time.now) - t_start
+        seconds = elapsed % 60
+        minutes = (elapsed / 60) % 60
+        hours = elapsed / (60 * 60)
+        format("%02d:%02d:%02d", hours, minutes, seconds)
+      end
+
       def str_to_amount(str, options = {})
         if str && !str.strip.empty?
           separator = options.fetch(:separator, I18n.t('number.currency.format.separator'))
