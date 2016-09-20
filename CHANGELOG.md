@@ -1,5 +1,8 @@
 Tzispa Helpers
 
+## v0.1.19
+- added DateTime helper module
+
 ## v0.1.18
 - add str_time_ellapsed method in text helper
 
