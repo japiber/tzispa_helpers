@@ -130,7 +130,6 @@ module Tzispa
         response['Content-Disposition'] = content_disposition
       end
 
-      # Use the contents of the file at +path+ as the response body.
       def send_file(path, opts = {})
         begin
           if opts[:type] or not response['Content-Type']
@@ -145,15 +144,13 @@ module Tzispa
           attachment! filename, disposition
           last_modified opts[:last_modified] if opts[:last_modified]
 
-          file      = Rack::File.new nil
-          file.path = path
-          result    = file.serving context.env
+          file   = Rack::File.new(Dir.pwd)
+          result = file.serving(request, path)
+
           result[1].each { |k,v| response.headers[k] ||= v }
           response.headers['Content-Length'] = result[1]['Content-Length']
-          #opts[:status] &&= Integer(opts[:status])
-          #halt opts[:status] || result[0], result[2]
           response.status = result[0]
-          response.body = result[2]
+          response.body = result[2]          
         rescue
           not_found 'Fichero no encontrado'
         end
