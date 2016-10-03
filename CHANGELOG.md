@@ -1,5 +1,8 @@
 Tzispa Helpers
 
+## v0.1.20
+- fix rack 2.0 incompatibility errors in response send_file
+
 ## v0.1.19
 - added DateTime helper module
 
