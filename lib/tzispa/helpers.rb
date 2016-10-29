@@ -11,6 +11,9 @@ module Tzispa
     require 'tzispa/helpers/response'
     require 'tzispa/helpers/security'
     require 'tzispa/helpers/text'
+    require 'tzispa/helpers/provider'
+    require 'tzispa/helpers/error_view'
+    require 'tzispa/helpers/recaptcha'
 
   end
 end
