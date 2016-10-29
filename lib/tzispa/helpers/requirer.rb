@@ -20,8 +20,6 @@ module Tzispa
           @required ||= Hash.new
           (@required[target] ||= Hash.new).tap { |reqt|
             reqt[value] = block || true
-            puts "#{target}, #{value} set to #{reqt[value]}"
-            reqt[value]
           }
         end
 
@@ -31,10 +29,8 @@ module Tzispa
 
         def required_valid?(target, value, obj)
           if (rq = required?(target, value)) && rq.respond_to?(:call)
-            puts "rq is a block"
             obj.instance_eval(&rq)
           else
-            puts "rq is not a block #{rq}"
             rq
           end
         end
