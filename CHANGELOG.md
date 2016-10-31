@@ -1,5 +1,9 @@
 Tzispa Helpers
 
+## v0.1.21
+- added requirer and sign_requirer dsl helpers
+- added provider dsl helper
+
 ## v0.1.20
 - fix rack 2.0 incompatibility errors in response send_file
 
