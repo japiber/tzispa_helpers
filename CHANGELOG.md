@@ -1,6 +1,6 @@
 Tzispa Helpers
 
-## v0.1.3
+## v0.2.0
 - move some helpers to experts avoiding excesive gem dependencies
 
 ## v0.1.21
