@@ -4,7 +4,6 @@ require 'date'
 require 'bigdecimal'
 require 'i18n'
 require "unicode_utils"
-require 'redcarpet'
 require 'cgi/util'
 
 module Tzispa
@@ -158,15 +157,6 @@ module Tzispa
 
       def price_amount(number, options = {})
         amount(number, options.merge(:nil_as_dash => false, :precision => I18n.t('number.currency.format.precision'), minimum_precision: 0))
-      end
-
-      def mime_formatter(text, mime)
-        case mime
-        when 'text/x-markdown'
-          Redcarpet::Markdown.new(Redcarpet::Render::HTML.new).render(text) if text
-        else
-          text
-        end
       end
 
       def starinizer(rating, star_value, max_stars)

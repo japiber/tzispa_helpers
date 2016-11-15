@@ -1,5 +1,8 @@
 Tzispa Helpers
 
+## v0.1.3
+- move some from helpers to experts avoiding excesive gem dependencies
+
 ## v0.1.21
 - added requirer and sign_requirer dsl helpers
 - added provider dsl helper
