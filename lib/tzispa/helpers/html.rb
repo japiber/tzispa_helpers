@@ -8,11 +8,15 @@ module Tzispa
     module Html
 
       def html_checked(value)
-        value ? ' checked="checked"' : String.new.freeze
+        value ? ' checked="checked"' : ''
       end
 
       def html_selected(value)
-        value ? ' selected="selected"' : String.new.freeze
+        value ? ' selected="selected"' : ''
+      end
+
+      def html_disabled(value)
+        value ? ' disabled="disabled"' : ''
       end
 
       def html_escape(str)
