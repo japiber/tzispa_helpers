@@ -1,5 +1,8 @@
 Tzispa Helpers
 
+## v0.2.1
+- added html_disabled helper method
+
 ## v0.2.0
 - move some helpers to experts avoiding excesive gem dependencies
 
