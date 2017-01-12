@@ -15,7 +15,7 @@ module Tzispa
             field.split(':').tap { |fld|
               src = fld.first
               dest = fld.last
-              value = unescape_html context.request[src]
+              value = String == context.request[src] ? unescape_html(context.request[src]) : context.request[src]
               data[dest.to_sym] = macro ? send(macro, value) : value
             }
           }
@@ -31,7 +31,7 @@ module Tzispa
             field.split(':').tap { |fld|
               src = fld.first
               dest = fld.last
-              value = unescape_html context.request[src]
+              value = String == context.request[src] ? unescape_html(context.request[src]) : context.request[src]
               data.send "#{dest}=".to_sym, macro ? send(macro, value) : value
             }
           }
