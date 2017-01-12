@@ -1,8 +1,10 @@
 # frozen_string_literal: true
+require 'tzispa/utils/string'
 
 module Tzispa
   module Helpers
     module Request
+      include Tzispa::Utils::String
 
       def request_data(fields)
         Hash.new.tap { |data|
@@ -13,7 +15,8 @@ module Tzispa
             field.split(':').tap { |fld|
               src = fld.first
               dest = fld.last
-              data[dest.to_sym] = macro ? send(macro, context.request[src]) : context.request[src]
+              value = unescape_html context.request[src]
+              data[dest.to_sym] = macro ? send(macro, value) : value
             }
           }
         }
@@ -28,7 +31,8 @@ module Tzispa
             field.split(':').tap { |fld|
               src = fld.first
               dest = fld.last
-              data.send "#{dest}=".to_sym, macro ? send(macro, context.request[src]) : context.request[src]
+              value = unescape_html context.request[src]
+              data.send "#{dest}=".to_sym, macro ? send(macro, value) : value
             }
           }
         }
