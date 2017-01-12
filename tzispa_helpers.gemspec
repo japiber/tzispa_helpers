@@ -13,9 +13,10 @@ Gem::Specification.new do |s|
   s.licenses    = ['MIT']
 
   s.required_ruby_version     = '~> 2.3'
-  
-  s.add_dependency 'i18n',               '~> 0.7'
-  s.add_dependency 'unicode_utils',      '~> 1.4'
+
+  s.add_dependency 'i18n',              '~> 0.7'
+  s.add_dependency 'unicode_utils',     '~> 1.4'
+  s.add_dependency 'tzispa_utils',      '~> 0.2.4'
 
   s.files         = Dir.glob("{lib}/**/*") + %w(README.md CHANGELOG.md)
   s.require_paths = ['lib']
