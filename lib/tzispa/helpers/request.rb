@@ -45,21 +45,16 @@ module Tzispa
           save_ext = fileext if keep_ext
           filename = (save_as ? "#{save_as}#{save_ext}" : request_file[:filename])
           tempfile = request_file[:tempfile]
+          dest_file = "#{destination_path}/#{filename}"
           begin
-            dest_file = "#{destination_path}/#{filename}"
+            FileUtils.mkdir_p(destination_path) unless File.exists?(destination_path)            
             FileUtils.cp tempfile.path, dest_file
-            result = { name: filename, ext: fileext, path: dest_file, size: ::File.size(dest_file), type: filetype }
-          rescue => err
-            context.logger.fatal(err) if context
-            result = nil
           ensure
             tempfile.close
             tempfile.unlink
           end
-        else
-          result = nil
+          { name: filename, ext: fileext, path: dest_file, size: ::File.size(dest_file), type: filetype }
         end
-        result
       end
 
 
