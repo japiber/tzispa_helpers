@@ -62,20 +62,11 @@ module Tzispa
       end
 
       def str_to_date(str, format=nil)
-        begin
-          Date.strptime(str, format || I18n.t('date.formats.default')) if str
-        rescue
-          nil
-        end
+        Date.strptime(str, format || I18n.t('date.formats.default')) if str
       end
 
       def str_to_datetime(str, format=nil)
-        begin
-          result = DateTime.strptime(str, format || I18n.t('time.formats.default'))
-        rescue
-          result = nil
-        end
-        result
+        DateTime.strptime(str, format || I18n.t('datetime.formats.default'))
       end
 
       def str_time_ellapsed(t_start, t_end=nil)
