@@ -95,6 +95,7 @@ module Tzispa
       def unauthorized(body = nil)
         error 401, body
       end
+      alias_method :not_authorized, :unauthorized
 
       # Set multiple response headers with Hash.
       def headers(hash = nil)
@@ -150,7 +151,7 @@ module Tzispa
           result[1].each { |k,v| response.headers[k] ||= v }
           response.headers['Content-Length'] = result[1]['Content-Length']
           response.status = result[0]
-          response.body = result[2]          
+          response.body = result[2]
         rescue
           not_found 'Fichero no encontrado'
         end
