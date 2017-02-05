@@ -62,10 +62,12 @@ module Tzispa
       end
 
       def str_to_date(str, format=nil)
+        str = strip_to_nil str
         Date.strptime(str, format || I18n.t('date.formats.default')) if str
       end
 
       def str_to_datetime(str, format=nil)
+        str = strip_to_nil str
         DateTime.strptime(str, format || I18n.t('datetime.formats.default'))
       end
 
