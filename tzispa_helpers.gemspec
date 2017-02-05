@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version     = '~> 2.3'
 
-  s.add_dependency 'i18n',              '~> 0.7'
+  s.add_dependency 'i18n',              '~> 0.8'
   s.add_dependency 'unicode_utils',     '~> 1.4'
   s.add_dependency 'tzispa_utils',      '~> 0.2.4'
 
