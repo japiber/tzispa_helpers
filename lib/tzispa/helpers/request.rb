@@ -1,10 +1,12 @@
 # frozen_string_literal: true
+
 require 'tzispa/utils/string'
 
 module Tzispa
   module Helpers
     module Request
-      include Tzispa::Utils::String
+
+      using Tzispa::Utils
 
       def request_data(fields)
         Hash.new.tap { |data|
@@ -15,7 +17,7 @@ module Tzispa
             field.split(':').tap { |fld|
               src = fld.first
               dest = fld.last
-              value = String == context.request[src] ? unescape_html(context.request[src]) : context.request[src]
+              value = String == context.request[src] ? String.unescape_html(context.request[src]) : context.request[src]
               data[dest.to_sym] = macro ? send(macro, value) : value
             }
           }
@@ -31,7 +33,7 @@ module Tzispa
             field.split(':').tap { |fld|
               src = fld.first
               dest = fld.last
-              value = String == context.request[src] ? unescape_html(context.request[src]) : context.request[src]
+              value = String == context.request[src] ? String.unescape_html(context.request[src]) : context.request[src]
               data.send "#{dest}=".to_sym, macro ? send(macro, value) : value
             }
           }
@@ -47,7 +49,7 @@ module Tzispa
           tempfile = request_file[:tempfile]
           dest_file = "#{destination_path}/#{filename}"
           begin
-            FileUtils.mkdir_p(destination_path) unless File.exists?(destination_path)            
+            FileUtils.mkdir_p(destination_path) unless File.exists?(destination_path)
             FileUtils.cp tempfile.path, dest_file
           ensure
             tempfile.close
