@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'i18n',              '~> 0.8'
   s.add_dependency 'unicode_utils',     '~> 1.4'
-  s.add_dependency 'tzispa_utils',      '~> 0.2.4'
+  s.add_dependency 'tzispa_utils',      '~> 0.3'
 
   s.files         = Dir.glob("{lib}/**/*") + %w(README.md CHANGELOG.md)
   s.require_paths = ['lib']
