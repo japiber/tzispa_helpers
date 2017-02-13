@@ -1,5 +1,11 @@
 Tzispa Helpers
 
+## v0.2.2
+- unscape html request form values
+- added not_authorized alias method
+- transform empty strings into nil for date/time methods
+- bug fixes
+
 ## v0.2.1
 - added html_disabled helper method
 
