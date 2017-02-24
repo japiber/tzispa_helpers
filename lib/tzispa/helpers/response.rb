@@ -143,6 +143,9 @@ module Tzispa
 
           result[1].each { |k,v| response.headers[k] ||= v }
           response.headers['Content-Length'] = result[1]['Content-Length']
+          if opts[:no_cache]
+            response.no_cache.cache_private.must_revalidate
+          end
           response.status = result[0]
           response.body = result[2]
         rescue
