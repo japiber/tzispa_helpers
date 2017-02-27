@@ -2,6 +2,7 @@
 
 require 'tzispa/rig/template'
 require 'tzispa/version'
+require 'tzispa/helpers/services/error_view'
 
 module Tzispa
   module Helpers
