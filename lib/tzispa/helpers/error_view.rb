@@ -25,7 +25,7 @@ module Tzispa
           text << ERROR_HEADER << '<body>'
           text << ERROR_PLATFORM_VERSIONS
           text << if ex
-                    srx = Tzispa::Helpers::Services::ErrorView ex
+                    srx = Tzispa::Helpers::Services::ErrorView.new ex
                     "<h1>#{srx.error_header}\n #{srx.error_backtrace_list}"
                   else
                     "<h1>Error #{status}</h1>\nSe ha producido un error indeterminado"
@@ -44,7 +44,7 @@ module Tzispa
       end
 
       def error_log(ex)
-        Tzispa::Helpers::Services::ErrorView(ex).error_backtrace_log
+        Tzispa::Helpers::Services::ErrorView.new(ex).error_backtrace_log
       end
 
       def error_default
