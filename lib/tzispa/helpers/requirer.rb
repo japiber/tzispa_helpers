@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Tzispa
   module Helpers
     module Requirer
@@ -7,7 +9,7 @@ module Tzispa
       end
 
       def required?(target, value)
-        self.class.required? target. value
+        self.class.required? target, value
       end
 
       def required_valid?(target, value)
@@ -17,10 +19,10 @@ module Tzispa
       module ClassMethods
 
         def required(target, value, &block)
-          @required ||= Hash.new
-          (@required[target] ||= Hash.new).tap { |reqt|
+          @required ||= {}
+          (@required[target] ||= {}).tap do |reqt|
             reqt[value] = block || true
-          }
+          end
         end
 
         def required?(target, value)

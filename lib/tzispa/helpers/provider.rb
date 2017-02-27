@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Tzispa
   module Helpers
     module Provider
@@ -11,13 +13,10 @@ module Tzispa
       end
 
       module ClassMethods
-
         def provides(*args)
-          (@provides ||= Hash.new).tap { |prv|
-            args&.each { |s|
-              prv[s.to_sym] = s
-            }
-          }
+          (@provides ||= {}).tap do |prv|
+            args&.each { |s| prv[s.to_sym] = s }
+          end
         end
 
         def provides?(verb)
@@ -28,9 +27,7 @@ module Tzispa
         def provides_map(source, dest)
           provides[source] = dest
         end
-
       end
-
 
     end
   end

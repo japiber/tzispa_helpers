@@ -2,6 +2,8 @@
 
 require 'uri'
 require_relative 'mime'
+require_relative 'services/send_file'
+require_relative 'services/content_type'
 
 module Tzispa
   module Helpers
@@ -23,10 +25,14 @@ module Tzispa
       # evaluation is deferred until the body is read with #each.
       def body(value = nil, &block)
         if block_given?
-          def block.each; yield(call) end
+          def block.each
+            yield(call)
+          end
           response.body = block
         elsif value
-          headers.delete 'Content-Length' unless request.head? || value.is_a?(Rack::File) || value.is_a?(Stream)
+          headers.delete 'Content-Length' unless request.head? ||
+                                                 value.is_a?(Rack::File) ||
+                                                 value.is_a?(Stream)
           response.body = value
         else
           response.body
@@ -42,7 +48,7 @@ module Tzispa
 
       # Halt processing and redirect to the URI provided.
       def redirect(uri, absolute, *args)
-        status request.allowed_http_version? && request.get? ? 303 : 302
+        status(request.allowed_http_version? && request.get? ? 303 : 302)
         response['Location'] = uri(uri.to_s, absolute)
         halt(*args)
       end
@@ -54,27 +60,30 @@ module Tzispa
         halt(*args)
       end
 
-
       # Generates the absolute URI for a given path in the app.
       # Takes Rack routers and reverse proxies into account.
       def uri(addr = nil, absolute = true)
-        return addr if addr =~ /\A[A-z][A-z0-9\+\.\-]*:/
+        return addr if addr.match?(/\A[A-z][A-z0-9\+\.\-]*:/)
         uri = [host = String.new]
-        if absolute
-          host << "http#{'s' if request.secure?}://"
-          if request.forwarded? or request.port != (request.secure? ? 443 : 80)
-            host << request.host_with_port
-          else
-            host << request.host
-          end
-        end
+        host << uri_host if absolute
         uri << (addr ? addr : request.path_info).to_s
         File.join uri
       end
 
+      def uri_host
+        String.new.tap do |host|
+          host << "http#{'s' if request.secure?}://"
+          host << (uri_port? ? request.host_with_port : request.host)
+        end
+      end
+
+      def uri_port?
+        request.forwarded? || request.port != (request.secure? ? 443 : 80)
+      end
+
       # Halt processing and return the error status provided.
-      def error(code, body = nil)
-        code, body    = 500, code.to_str if code.respond_to? :to_str
+      def error(code = 500, body = nil)
+        body = code.to_str if code.respond_to? :to_str
         response.body = body unless body.nil?
         halt code
       end
@@ -88,7 +97,7 @@ module Tzispa
       def unauthorized(body = nil)
         error 401, body
       end
-      alias_method :not_authorized, :unauthorized
+      alias not_authorized unauthorized
 
       # Set multiple response headers with Hash.
       def headers(hash = nil)
@@ -99,58 +108,16 @@ module Tzispa
       # Set the Content-Type of the response body given a media type or file
       # extension.
       def content_type(type = nil, params = {})
-        return response['Content-Type'] unless type
-        default = params.delete :default
-        mime_type = mime_type(type) || default
-        fail "Unknown media type: %p" % type if mime_type.nil?
-        mime_type = mime_type.dup
-        unless params.include? :charset
-          params[:charset] = params.delete('charset') || config.default_encoding
-        end
-        params.delete :charset if mime_type.include? 'charset'
-        unless params.empty?
-          mime_type << (mime_type.include?(';') ? ', ' : ';')
-          mime_type << params.map do |key, val|
-            val = val.inspect if val =~ /[";,]/
-            "#{key}=#{val}"
-          end.join(', ')
-        end
-        response['Content-Type'] = mime_type
-      end
-
-      def attachment!(filename = nil, disposition = 'attachment')
-        content_disposition = disposition.to_s
-        content_disposition += "; filename=\"#{filename}\"; filename*=UTF-8''#{URI.escape(filename)}" if !filename.nil?
-        response['Content-Disposition'] = content_disposition
+        ct = Tzispa::Helpers::Services::ContentType.new(response,
+                                                        config.default_encoding)
+        ct.header(type, params)
       end
 
       def send_file(path, opts = {})
-        begin
-          if opts[:type] or not response['Content-Type']
-            content_type opts[:type] || opts[:extension], :default => 'application/octet-stream'
-          end
-
-          disposition = opts[:disposition]
-          filename    = opts[:filename]
-          disposition = 'attachment' if disposition.nil? and filename
-          filename    = path         if filename.nil?
-
-          attachment! filename, disposition
-          last_modified opts[:last_modified] if opts[:last_modified]
-
-          file   = Rack::File.new(Dir.pwd)
-          result = file.serving(request, path)
-
-          result[1].each { |k,v| response.headers[k] ||= v }
-          response.headers['Content-Length'] = result[1]['Content-Length']
-          if opts[:no_cache]
-            response.no_cache.cache_private.must_revalidate
-          end
-          response.status = result[0]
-          response.body = result[2]
-        rescue
-          not_found 'Fichero no encontrado'
-        end
+        not_found unless ::File.exist? path
+        file = Rack::File.new(Dir.pwd)
+        fss = Tzispa::Helpers::Services::SendFile.new response, path, opts
+        fss.send file.serving(request, path)
       end
 
       # Sugar for redirect (example:  redirect back)
@@ -188,11 +155,11 @@ module Tzispa
         response.status == 404
       end
 
-
       class NotFound < NameError #:nodoc:
-        def http_status; 404 end
+        def http_status
+          404
+        end
       end
-
 
     end
   end

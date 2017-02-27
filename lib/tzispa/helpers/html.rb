@@ -20,11 +20,11 @@ module Tzispa
       end
 
       def html_escape(str)
-        CGI::escapeHTML str
+        CGI.escapeHTML str
       end
 
       def html_unescape(str)
-        CGI::unescapeHTML str
+        CGI.unescapeHTML str
       end
 
       def html_urlencode(str)
@@ -36,9 +36,8 @@ module Tzispa
       end
 
       def html_strip(source)
-        source.gsub(/<\/?[^>]*>/, '')
+        source.gsub(%r{/<\/?[^>]*>/}, '')
       end
-
 
       #
       # $Id: sanitize.rb 3 2005-04-05 12:51:14Z dwight $
@@ -146,7 +145,6 @@ module Tzispa
 
         result
       end
-
 
     end
   end

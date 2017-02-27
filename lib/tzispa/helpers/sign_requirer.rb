@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'requirer'
 
 module Tzispa
@@ -17,9 +19,7 @@ module Tzispa
         self.class.sign_valid? self
       end
 
-
       module ClassMethods
-
         def sign_required!(&block)
           required(:router_params, :sign, &block)
         end
@@ -31,7 +31,6 @@ module Tzispa
         def sign_valid?(obj)
           required_valid? :router_params, :sign, obj
         end
-
       end
 
     end
