@@ -108,6 +108,7 @@ module Tzispa
       # Set the Content-Type of the response body given a media type or file
       # extension.
       def content_type(type = nil, params = {})
+        return if response.drop_content_info?
         ct = Tzispa::Helpers::Services::ContentType.new(response,
                                                         config.default_encoding)
         ct.header(type, params)
@@ -153,6 +154,10 @@ module Tzispa
       # whether or not the status is set to 404
       def not_found?
         response.status == 404
+      end
+
+      def error_500(str)
+        500.tap { |_code| response.body = str if str }
       end
 
       class NotFound < NameError #:nodoc:
