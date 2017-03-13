@@ -1,4 +1,6 @@
 # -*- encoding: utf-8 -*-
+# frozen_string_literal: true
+
 require File.expand_path('../lib/tzispa/helpers/version', __FILE__)
 
 Gem::Specification.new do |s|
@@ -12,7 +14,7 @@ Gem::Specification.new do |s|
   s.description = 'Module Helpers for Tzispa framework'
   s.licenses    = ['MIT']
 
-  s.required_ruby_version     = '~> 2.3'
+  s.required_ruby_version = '~> 2.3'
 
   s.add_dependency 'i18n',              '~> 0.8'
   s.add_dependency 'unicode_utils',     '~> 1.4'

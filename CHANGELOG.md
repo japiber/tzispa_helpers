@@ -1,5 +1,9 @@
 Tzispa Helpers
 
+## v0.3.0
+- bug fixes
+- code refactoring
+
 ## v0.2.2
 - unscape html request form values
 - added not_authorized alias method
