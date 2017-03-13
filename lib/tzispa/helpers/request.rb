@@ -6,7 +6,7 @@ module Tzispa
   module Helpers
     module Request
 
-      using Tzispa::Utils
+      using Tzispa::Utils::TzString
 
       def request_data(fields)
         {}.tap do |data|
