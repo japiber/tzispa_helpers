@@ -19,6 +19,19 @@ module Tzispa
         value ? ' disabled="disabled"' : ''
       end
 
+      def yesno_list(yesno_text, selected = nil)
+        proc do
+          yn = yesno_text.split(';')
+          { yes: yn.first, no: yn.last }.map do |k, v|
+            loop_item(
+              value: k,
+              text: v,
+              selected: html_selected(selected == k.to_s)
+            )
+          end
+        end
+      end
+
       def html_escape(str)
         CGI.escapeHTML str
       end
