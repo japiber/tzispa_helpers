@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'tzispa/utils/string'
+require 'json'
 
 module Tzispa
   module Helpers
@@ -19,13 +20,16 @@ module Tzispa
         end
       end
 
-      def request_data_object(data_object:, fields:)
+      def request_data_object(data_object:, fields:, json: nil)
         data_object.tap do |data|
           fields.each do |name|
             macro_field = name.split('@:')
             macro = macro_field.first.to_sym if macro_field.length == 2
             field = macro_field.length == 2 ? macro_field.last : macro_field.first
             build_field field, macro, data
+          end
+          json.each do |key, value|
+            data.send "#{key}=", build_json_field(value)
           end
         end
       end
@@ -64,6 +68,17 @@ module Tzispa
             data.send "#{dest}=".to_sym, value
           end
         end
+      end
+
+      def build_json_field(values)
+        {}.tap do |data|
+          values.each do |name|
+            macro_field = name.split('@:')
+            macro = macro_field.first.to_sym if macro_field.length == 2
+            field = macro_field.length == 2 ? macro_field.last : macro_field.first
+            build_field field, macro, data
+          end
+        end.to_json
       end
 
     end
