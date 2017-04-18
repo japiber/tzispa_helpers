@@ -28,7 +28,7 @@ module Tzispa
             field = macro_field.length == 2 ? macro_field.last : macro_field.first
             build_field field, macro, data
           end
-          json.each do |key, value|
+          json&.each do |key, value|
             data.send "#{key}=", build_json_field(value)
           end
         end
