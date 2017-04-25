@@ -1,5 +1,8 @@
 Tzispa Helpers
 
+## v0.3.2
+- added begore / after hook helpers
+
 ## v0.3.1
 - added json fields support to request_data_object
 - added yesno_list builder method
