@@ -62,7 +62,7 @@ module Tzispa
 
       def str_to_integer(str)
         return unless (sstr = strip_to_nil(str))
-        Integer.new sstr
+        Integer sstr
       end
 
       def str_to_date(str, format = nil)
