@@ -60,6 +60,11 @@ module Tzispa
         strue ? (strue == str) : (str == 'yes' || str == 'true')
       end
 
+      def str_to_integer(str)
+        return unless (sstr = strip_to_nil(str))
+        Integer.new sstr
+      end
+
       def str_to_date(str, format = nil)
         str = strip_to_nil str
         Date.strptime(str, format || I18n.t('date.formats.default')) if str
