@@ -1,7 +1,10 @@
 Tzispa Helpers
 
+## v0.3.3
+- added str_to_integer text helper macro
+
 ## v0.3.2
-- added begore / after hook helpers
+- added before / after hook helpers
 
 ## v0.3.1
 - added json fields support to request_data_object
