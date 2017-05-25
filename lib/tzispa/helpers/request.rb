@@ -2,36 +2,32 @@
 
 require 'tzispa/utils/string'
 require 'json'
+require_relative 'macro_field'
 
 module Tzispa
   module Helpers
     module Request
 
-      using Tzispa::Utils::TzString
+      include Tzispa::Helpers::MacroField
+
+      def request_json(key = nil)
+        return unless request.content_type&.include?('application/json')
+        body = request.body.gets
+        key ? JSON.parse(body)[key] : JSON.parse(body)
+      end
+
+      def request_json_object(key = nil, data_object:, fields:, json: nil)
+        process_macros request_json(key), fields, data_object: data_object,
+                                                  json: json
+      end
 
       def request_data(fields)
-        {}.tap do |data|
-          fields.each do |name|
-            macro_field = name.split('@:')
-            macro = macro_field.first.to_sym if macro_field.length == 2
-            field = macro_field.length == 2 ? macro_field.last : macro_field.first
-            build_field field, macro, data
-          end
-        end
+        process_macros request, fields
       end
 
       def request_data_object(data_object:, fields:, json: nil)
-        data_object.tap do |data|
-          fields.each do |name|
-            macro_field = name.split('@:')
-            macro = macro_field.first.to_sym if macro_field.length == 2
-            field = macro_field.length == 2 ? macro_field.last : macro_field.first
-            build_field field, macro, data
-          end
-          json&.each do |key, value|
-            data.send "#{key}=", build_json_field(value)
-          end
-        end
+        process_macros request, fields, data_object: data_object,
+                                        json: json
       end
 
       def request_file_upload(request_file:, destination_path:, save_as: nil, keep_ext: true)
@@ -51,34 +47,6 @@ module Tzispa
         end
         { name: filename, ext: fileext, path: dest_file,
           size: ::File.size(dest_file), type: filetype }
-      end
-
-      def build_field(field, macro, data)
-        field.split(':').tap do |src, dest|
-          dest ||= src
-          value = if String == request[src]
-                    String.unescape_html(request[src])
-                  else
-                    request[src]
-                  end
-          value = macro ? send(macro, value) : value
-          if data.is_a? ::Hash
-            data[dest.to_sym] = value
-          else
-            data.send "#{dest}=".to_sym, value
-          end
-        end
-      end
-
-      def build_json_field(values)
-        {}.tap do |data|
-          values.each do |name|
-            macro_field = name.split('@:')
-            macro = macro_field.first.to_sym if macro_field.length == 2
-            field = macro_field.length == 2 ? macro_field.last : macro_field.first
-            build_field field, macro, data
-          end
-        end.to_json
       end
 
     end
