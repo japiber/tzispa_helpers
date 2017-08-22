@@ -1,5 +1,9 @@
 Tzispa Helpers
 
+## v0.3.4
+- added macro_field helper
+- added user login related helper module
+
 ## v0.3.3
 - added str_to_integer text helper macro
 
