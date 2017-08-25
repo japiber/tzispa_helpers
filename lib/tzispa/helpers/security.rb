@@ -45,23 +45,6 @@ module Tzispa
         hashed == hash_password(pwd, salt)
       end
 
-      class Identity
-        attr_reader :id, :token
-
-        def initialize(id, secret)
-          @id = id
-          @token = generate_token id, secret
-        end
-
-        def valid?(secret)
-          @token == Identity.generate_token(@id, secret)
-        end
-
-        def self.generate_token(value, salt)
-          Digest::SHA1.hexdigest "___#{value}_#{salt}__token__"
-        end
-      end
-
     end
   end
 end
