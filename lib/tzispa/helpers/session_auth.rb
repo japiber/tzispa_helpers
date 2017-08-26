@@ -58,7 +58,7 @@ module Tzispa
         !session_auth? && (context.layout != context.config.login_layout)
       end
 
-      def unauthorized_but_logged
+      def unauthorized_but_auth
         context.not_authorized unless session_auth?
       end
 
