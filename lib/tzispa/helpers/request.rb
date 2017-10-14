@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'tzispa/utils/string'
 require 'json'
+require 'tzispa_utils'
 require_relative 'macro_field'
 
 module Tzispa
