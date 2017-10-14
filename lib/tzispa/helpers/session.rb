@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'securerandom'
-require 'tzispa/helpers/session_flash_bag'
+require_relative 'session_flash_bag'
 
 module Tzispa
   module Helpers

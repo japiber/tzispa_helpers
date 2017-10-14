@@ -39,7 +39,6 @@ module Tzispa
         ident = context.session[SESSION_AUTH_USER]
         ident.id if session_auth?
       end
-      alias session_login session_auth
 
       def session_login(user)
         context.session[SESSION_AUTH_USER] = Authentication.new(user, context.session.id)

@@ -14,14 +14,21 @@ module Tzispa
       def process_macros(source, fields, data_object: nil, json: nil)
         (data_object || {}).tap do |data|
           fields.each do |name|
-            macro_field = name.split('@:')
-            macro = macro_field.first.to_sym if macro_field.length == 2
-            field = macro_field.length == 2 ? macro_field.last : macro_field.first
+            macro, field = split_macro_field(name)
             build_field source, field, macro, data
           end
           json&.each do |key, value|
             data.send "#{key}=", build_json_field(source, value)
           end
+        end
+      end
+
+      def split_macro_field(name)
+        macro_field = name.split('@:')
+        if macro_field.length == 2
+          [macro_field.first.to_sym, macro_field.last]
+        else
+          [nil, macro_field.first]
         end
       end
 
