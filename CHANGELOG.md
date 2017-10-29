@@ -1,5 +1,8 @@
 Tzispa Helpers
 
+## v0.3.6
+- constants autoloading
+
 ## v0.3.4
 - added macro_field helper
 - added user login related helper module
